@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router'
+import Swal from 'sweetalert2' // 1. เพิ่ม Import SweetAlert2
 import carImg from '../assets/car.png'
 
 export default function Car() {
@@ -25,8 +26,23 @@ export default function Car() {
       const perMonth = totalPay / months
 
       setMonthlyInstallment(perMonth.toFixed(2))
+
+      // 2. แสดง SweetAlert2 เมื่อคำนวณสำเร็จ
+      Swal.fire({
+        title: `ผ่อนชำระ ${perMonth.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} บาท/เดือน`,
+        text: "Drag me! ลากหน้าต่างนี้ได้นะ",
+        icon: "success",
+        draggable: true
+      });
+
     } else {
-      alert('กรุณากรอกราคารถและอัตราดอกเบี้ยให้ถูกต้อง')
+      // 3. เปลี่ยน alert ธรรมดาให้เป็น SweetAlert2 เพื่อความสวยงาม
+      Swal.fire({
+        title: "ข้อมูลไม่ถูกต้อง",
+        text: "กรุณากรอกราคารถและอัตราดอกเบี้ยให้ถูกต้อง",
+        icon: "error",
+        draggable: true
+      });
     }
   }
 

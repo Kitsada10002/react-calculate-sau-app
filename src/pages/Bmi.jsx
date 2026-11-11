@@ -1,25 +1,41 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router'
+import Swal from 'sweetalert2' // 1. เพิ่ม Import SweetAlert2
 import bmiImg from '../assets/bmi.png'
 
 export default function Bmi() {
   const navigate = useNavigate()
-  
+
   // สร้าง State สำหรับเก็บค่าน้ำหนัก, ส่วนสูง และผลลัพธ์
   const [weight, setWeight] = useState('')
   const [height, setHeight] = useState('')
   const [bmiResult, setBmiResult] = useState('0.00')
 
-  // ฟังก์ชันคำนวณ BMI: น้ำหนัก (กก.) / (ส่วนสูงเป็นเมตรยกกำลังสอง)
+  // ฟังก์ชันคำนวณ BMI
   const handleCalculate = () => {
     const w = parseFloat(weight)
     const h = parseFloat(height) / 100 // แปลงจากเซนติเมตรเป็นเมตร
 
     if (w > 0 && h > 0) {
       const bmi = w / (h * h)
-      setBmiResult(bmi.toFixed(2)) // แสดงผลทศนิยม 2 ตำแหน่ง
+      setBmiResult(bmi.toFixed(2))
+
+      // 2. เพิ่ม Swal.fire ตรงนี้เมื่อคำนวณสำเร็จ
+      Swal.fire({
+        title: `BMI ของคุณคือ ${bmi.toFixed(2)}`,
+        text: "Drag me! ลากหน้าต่างนี้ได้นะ",
+        icon: "success",
+        draggable: true
+      });
+
     } else {
-      alert('กรุณากรอกน้ำหนักและส่วนสูงให้ถูกต้อง')
+      // (Optional) เปลี่ยน alert ธรรมดาให้เป็น Swal.fire ด้วยเพื่อความสวยงาม
+      Swal.fire({
+        title: "ข้อมูลไม่ถูกต้อง",
+        text: "กรุณากรอกน้ำหนักและส่วนสูงให้ถูกต้อง",
+        icon: "error",
+        draggable: true
+      });
     }
   }
 
@@ -35,35 +51,35 @@ export default function Bmi() {
       <div style={{ background: '#fff', padding: '40px', borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', width: '450px', textAlign: 'center' }}>
         <h2 style={{ fontSize: '22px', fontWeight: 'bold', marginBottom: '4px' }}>BMI Calculator</h2>
         <p style={{ color: '#666', fontSize: '13px', marginBottom: '20px' }}>คำนวณ BMI</p>
-        
+
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
           <img src={bmiImg} alt="BMI" style={{ width: '80px', height: '80px', objectFit: 'contain' }} />
         </div>
 
         <div style={{ textAlign: 'left', marginBottom: '15px' }}>
           <label style={{ fontSize: '12px', color: '#333', display: 'block', marginBottom: '5px' }}>ป้อนน้ำหนัก (กิโลกรัม)</label>
-          <input 
-            type="number" 
-            placeholder="เช่น 65" 
+          <input
+            type="number"
+            placeholder="เช่น 65"
             value={weight}
             onChange={(e) => setWeight(e.target.value)}
-            style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #ddd', fontSize: '14px', boxSizing: 'border-box' }} 
+            style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #ddd', fontSize: '14px', boxSizing: 'border-box' }}
           />
         </div>
 
         <div style={{ textAlign: 'left', marginBottom: '20px' }}>
           <label style={{ fontSize: '12px', color: '#333', display: 'block', marginBottom: '5px' }}>ป้อนส่วนสูง (เซนติเมตร)</label>
-          <input 
-            type="number" 
-            placeholder="เช่น 170" 
+          <input
+            type="number"
+            placeholder="เช่น 170"
             value={height}
             onChange={(e) => setHeight(e.target.value)}
-            style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #ddd', fontSize: '14px', boxSizing: 'border-box' }} 
+            style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #ddd', fontSize: '14px', boxSizing: 'border-box' }}
           />
         </div>
 
         {/* ผูกฟังก์ชันคำนวณเข้ากับปุ่ม */}
-        <button 
+        <button
           onClick={handleCalculate}
           style={{ width: '100%', background: '#2563eb', color: '#fff', border: 'none', padding: '12px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', marginBottom: '10px' }}
         >
@@ -71,7 +87,7 @@ export default function Bmi() {
         </button>
 
         {/* ผูกฟังก์ชันรีเซ็ตเข้ากับปุ่ม */}
-        <button 
+        <button
           onClick={handleReset}
           style={{ width: '100%', background: '#f3f4f6', color: '#333', border: 'none', padding: '10px', borderRadius: '6px', cursor: 'pointer', marginBottom: '20px' }}
         >
@@ -82,7 +98,7 @@ export default function Bmi() {
           ค่า BMI ที่คำนวณได้: <span style={{ color: '#2563eb', fontWeight: 'bold' }}>{bmiResult}</span>
         </div>
 
-        <button 
+        <button
           onClick={() => navigate('/')}
           style={{ width: '100%', background: '#e5e7eb', color: '#333', border: 'none', padding: '10px', borderRadius: '20px', cursor: 'pointer', fontSize: '13px' }}
         >
